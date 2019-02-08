@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Travel.API.Infrastructure.Services;
 using Travel.Infrastructure;
 
 namespace Travel.API
@@ -31,7 +32,7 @@ namespace Travel.API
         {
             services.AddCustomMvc()
                 .AddCustomDbContext(Configuration)
-                .AddAutoMapper();
+                .AddCustomMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +79,15 @@ namespace Travel.API
                    },
                        ServiceLifetime.Scoped  //Showing explicitly that the DbContext is shared across the HTTP request scope (graph of objects started in the HTTP request)
                    );
+
+            return services;
+        }
+
+        public static IServiceCollection AddCustomMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper();
+
+            services.AddScoped<IMapperService, MapperService>();
 
             return services;
         }

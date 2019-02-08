@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Travel.API.Infrastructure.Services;
 using Travel.API.Model;
 using Travel.Domain.AggregatesModel.TravelerAggregate;
 using Travel.Infrastructure;
@@ -19,9 +19,9 @@ namespace Travel.API.Controllers
     {
 
         private readonly TravelContext _travelContext;
-        private readonly IMapper _mapper;
+        private readonly IMapperService _mapper;
 
-        public TravelerController(TravelContext context, IMapper mapper)
+        public TravelerController(TravelContext context, IMapperService mapper)
         {
             _travelContext = context;
             _mapper = mapper;

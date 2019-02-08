@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Travel.API.Infrastructure.Services;
+using Travel.Infrastructure;
 
 namespace Travel.API.Controllers
 {
@@ -11,5 +13,9 @@ namespace Travel.API.Controllers
     [ApiController]
     public class RefuelController : ControllerBase
     {
+        public RefuelController(TravelContext context, IMapperService mapper)
+        {
+
+        }
     }
 }
