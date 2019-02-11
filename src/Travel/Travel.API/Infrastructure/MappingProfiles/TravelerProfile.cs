@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Travel.API.Model;
+using Travel.API.ViewModel;
 using Travel.Domain.AggregatesModel.TravelerAggregate;
 
 namespace Travel.API.Infrastructure.MappingProfiles

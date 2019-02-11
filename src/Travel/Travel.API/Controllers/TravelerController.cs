@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Travel.API.Infrastructure.Services;
-using Travel.API.Model;
+using Travel.API.ViewModel;
 using Travel.Domain.AggregatesModel.TravelerAggregate;
 using Travel.Infrastructure;
 
@@ -31,36 +31,37 @@ namespace Travel.API.Controllers
         // GET api/[controller]/items/1
         [HttpGet]
         [Route("items/{ids?}")]
+        [ProducesResponseType(typeof(PaginatedResults<TravelerItem>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(IEnumerable<TravelerItem>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ItemsAsync([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, string ids = null)
         {
             if (!string.IsNullOrEmpty(ids))
             {
-                var items = await GetItemsByIdsAsync(ids);
+                var arrayItems = await GetItemsByIdsAsync(ids);
 
-                if (!items.Any())
+                if (!arrayItems.Any())
                 {
                     return BadRequest("ids value invalid. Must be comma-separated list of numbers");
                 }
 
-                return Ok(items);
+                return Ok(arrayItems);
             }
 
             var totalItems = await _travelContext.Travelers
                 .LongCountAsync();
 
-            var itemsOnPage = await _travelContext.Travelers
+            var items = await _travelContext.Travelers
                 .OrderBy(c => c.Name)
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize)
                 .ToListAsync();
 
-            //var model = new PaginatedItemsViewModel<CatalogItem>(pageIndex, pageSize, totalItems, itemsOnPage);
+            var itemsOnPage = _mapper.Map<List<TravelerItem>>(items.AsEnumerable());
 
-            var model = _mapper.Map<List<TravelerItem>>(itemsOnPage.AsEnumerable());
+            var results = new PaginatedResults<TravelerItem>(pageIndex, pageSize, totalItems, itemsOnPage);
 
-            return Ok(model);
+            return Ok(results);
         }
 
         private async Task<List<TravelerItem>> GetItemsByIdsAsync(string ids)
@@ -77,8 +78,6 @@ namespace Travel.API.Controllers
 
             var items = await _travelContext.Travelers.Where(ci => idsToSelect.Contains(ci.Id)).ToListAsync();
 
-            //items = ChangeUriPlaceholder(items);
-
             return _mapper.Map<List<TravelerItem>>(items);
         }
 
@@ -88,7 +87,7 @@ namespace Travel.API.Controllers
         public async Task<IActionResult> CreateTravelerAsync([FromBody]TravelerItem travelerItem)
         {
             if (travelerItem.Id != 0)
-                throw new ArgumentException("The 'Traveler.Id' must be different from 0.");
+                throw new ArgumentException("The 'Refuel.Id' must be different from 0.");
 
             Traveler traveler = _mapper.Map<Traveler>(travelerItem);
 

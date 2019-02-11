@@ -15,6 +15,7 @@ namespace Travel.Infrastructure
 
         public DbSet<Travel.Domain.AggregatesModel.TravelAggregate.Trip> Travels { get; set; }
         public DbSet<Travel.Domain.AggregatesModel.TravelerAggregate.Traveler> Travelers { get; set; }
+        public DbSet<Travel.Domain.AggregatesModel.RefuelAggregate.Refuel> Refuels { get; set; }
         public IDbContextTransaction CurrentTransaction { get; private set; }
         
         public TravelContext(DbContextOptions<TravelContext> options) : base(options) { }
