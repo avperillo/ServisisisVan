@@ -32,7 +32,8 @@ namespace Travel.API
         {
             services.AddCustomMvc()
                 .AddCustomDbContext(Configuration)
-                .AddCustomMapper();
+                .AddCustomMapper()
+                .AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,12 +48,22 @@ namespace Travel.API
                 app.UseHsts();
             }
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
 
-    static class CustomExtensions
+    static class ServiceExtensions
     {
         public static IServiceCollection AddCustomMvc(this IServiceCollection services)
         {
@@ -90,6 +101,40 @@ namespace Travel.API
             services.AddScoped<IMapperService, MapperService>();
 
             return services;
+        }
+
+        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "Travel HTTP API",
+                    Version = "v1"
+                });
+
+            });
+
+            return services;
+        }
+    }
+
+    static class ApplicationBuilderExtensions
+    {
+        public static IApplicationBuilder AddSwaggerConfigure(this IApplicationBuilder builder)
+        {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            builder.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            builder.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            return builder;
         }
     }
 }
