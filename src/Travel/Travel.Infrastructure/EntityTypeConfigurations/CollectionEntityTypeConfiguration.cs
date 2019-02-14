@@ -1,26 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using Travel.Domain.AggregatesModel.ChargeAggregate;
+using Travel.Domain.AggregatesModel.CollectionAggregate;
 
 namespace Travel.Infrastructure.EntityTypeConfigurations
 {
-    class ChargeEntityTypeConfiguration : IEntityTypeConfiguration<Charge>
+    class CollectionEntityTypeConfiguration : IEntityTypeConfiguration<Collection>
     {
-        public void Configure(EntityTypeBuilder<Charge> builder)
+        public void Configure(EntityTypeBuilder<Collection> builder)
         {
-            builder.ToTable("Charges");
+            builder.ToTable("Collections");
 
             builder.HasKey(b => b.Id);
             builder.Property(b => b.Id)
-                .ForSqlServerUseSequenceHiLo("charge_sequence");
+                .ForSqlServerUseSequenceHiLo("collection_sequence");
 
             builder.Ignore(b => b.DomainEvents);
 
             builder.Property(b => b.Date)
                 .HasDefaultValue(DateTime.Now);
 
-            builder.Property(b => b.Amount);
+            builder.HasMany(b => b.Entries).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

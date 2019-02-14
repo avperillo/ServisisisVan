@@ -1,23 +1,26 @@
 ﻿using Domain.SeedWork;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using Travel.Domain.Events;
 
-namespace Travel.Domain.AggregatesModel.ChargeAggregate
+namespace Travel.Domain.AggregatesModel.CollectionAggregate
 {
-    public class Charge : Entity, IAggregateRoot
+    public class Entry : Entity
     {
+        public int IdCollection { get; private set; }
         public DateTime Date { get; private set; }
         public int IdTraveler { get; private set; }
         public decimal Amount { get; private set; }
 
-        public Charge(DateTime date, int idTraveler, decimal amount)
+        public Entry(int idCollection, DateTime date, int idTraveler, decimal amount)
         {
             Amount = amount > 0 ? amount : throw new ArgumentException(nameof(amount));
+            IdCollection = idCollection;
             Date = date;
             IdTraveler = idTraveler;
 
-            AddDomainEvent(new ChargeAddedDomainEvent(this));
+            AddDomainEvent(new EntryAddedDomainEvent(this));
         }
-
     }
 }

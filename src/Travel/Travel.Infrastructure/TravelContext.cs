@@ -24,7 +24,7 @@ namespace Travel.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new TripEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TravelerEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new ChargeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CollectionEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RefuelEntityTypeConfiguration());
         }
 

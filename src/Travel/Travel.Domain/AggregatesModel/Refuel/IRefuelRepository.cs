@@ -5,8 +5,8 @@ namespace Travel.Domain.AggregatesModel.RefuelAggregate
 {
     public interface IRefuelRepository : IRepository<Refuel>
     {
-        Refuel Add(Refuel charge);
-        void Update(Refuel charge);
+        Refuel Add(Refuel refuel);
+        void Update(Refuel refuel);
         Task<Refuel> GetByIdAsync(int idRefuel);
     }
 }

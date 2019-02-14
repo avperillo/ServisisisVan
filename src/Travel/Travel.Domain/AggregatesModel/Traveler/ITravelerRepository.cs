@@ -8,8 +8,8 @@ namespace Travel.Domain.AggregatesModel.TravelerAggregate
 {
     public interface ITravelerRepository : IRepository<Traveler>
     {
-        Traveler Add(Traveler charge);
-        void Update(Traveler charge);
+        Traveler Add(Traveler traveler);
+        void Update(Traveler traveler);
         Task<Traveler> GetByIdAsync(int idTraveler);
     }
 }

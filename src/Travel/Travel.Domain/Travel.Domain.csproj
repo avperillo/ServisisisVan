@@ -8,4 +8,8 @@
     <ProjectReference Include="..\..\Infrastructure\Domain.SeedWork\Domain.SeedWork.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
 </Project>
