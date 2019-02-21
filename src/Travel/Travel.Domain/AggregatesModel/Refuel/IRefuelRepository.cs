@@ -8,5 +8,6 @@ namespace Travel.Domain.AggregatesModel.RefuelAggregate
         Refuel Add(Refuel refuel);
         void Update(Refuel refuel);
         Task<Refuel> GetByIdAsync(int idRefuel);
+        void Remove(Refuel refuel);
     }
 }

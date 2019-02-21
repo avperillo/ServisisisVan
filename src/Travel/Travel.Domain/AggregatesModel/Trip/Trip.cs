@@ -1,8 +1,7 @@
 ﻿using Domain.SeedWork;
 using System;
 
-namespace Travel.Domain.AggregatesModel.TravelAggregate
-{
+namespace Travel.Domain.AggregatesModel.TripAggregate{
     public class Trip : Entity, IAggregateRoot
     {
         public DateTime Date { get; private set; }
@@ -15,7 +14,7 @@ namespace Travel.Domain.AggregatesModel.TravelAggregate
         public Trip(DateTime date, int idDriver)
         {
             Date = date;
-            IdDriver = IdDriver;
+            IdDriver = idDriver;
         }
 
 

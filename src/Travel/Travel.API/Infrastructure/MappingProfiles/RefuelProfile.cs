@@ -10,6 +10,9 @@ namespace Travel.API.Infrastructure.MappingProfiles
         {
             CreateMap<Refuel, RefuelItem>();
             CreateMap<RefuelItem, Refuel>();
+
+            CreateMap<Refuel, RefuelViewModel>();
+            CreateMap<RefuelViewModel, Refuel>();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Travel.API.Infrastructure.Queries;
 using Travel.API.Infrastructure.Services;
 using Travel.API.ViewModel;
 using Travel.Domain.AggregatesModel.TravelerAggregate;
@@ -17,13 +18,16 @@ namespace Travel.API.Controllers
     [ApiController]
     public class TravelerController : ControllerBase
     {
-
-        private readonly TravelContext _travelContext;
+        private readonly ITravelerRepository _travelerRepository;
+        private readonly ITravelerQueries _travelerQueries;
         private readonly IMapperService _mapper;
 
-        public TravelerController(TravelContext context, IMapperService mapper)
+        public TravelerController(ITravelerRepository travelerRepository,
+            ITravelerQueries travelerQueries,
+            IMapperService mapper)
         {
-            _travelContext = context;
+            _travelerRepository = travelerRepository;
+            _travelerQueries = travelerQueries;
             _mapper = mapper;
         }
 
@@ -31,8 +35,8 @@ namespace Travel.API.Controllers
         // GET api/[controller]/items/1
         [HttpGet]
         [Route("items/{ids?}")]
-        [ProducesResponseType(typeof(PaginatedResults<TravelerItem>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(IEnumerable<TravelerItem>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PaginatedResults<TravelerViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<TravelerViewModel>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ItemsAsync([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, string ids = null)
         {
@@ -48,91 +52,85 @@ namespace Travel.API.Controllers
                 return Ok(arrayItems);
             }
 
-            var totalItems = await _travelContext.Travelers
-                .LongCountAsync();
+            var totalItems = await _travelerQueries.TravelCountAsync();
+            var viewModels = await _travelerQueries.GetPagedAsync(pageSize, pageIndex);
 
-            var items = await _travelContext.Travelers
-                .OrderBy(c => c.Name)
-                .Skip(pageSize * pageIndex)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var itemsOnPage = _mapper.Map<List<TravelerItem>>(items.AsEnumerable());
-
-            var results = new PaginatedResults<TravelerItem>(pageIndex, pageSize, totalItems, itemsOnPage);
+            var results = new PaginatedResults<TravelerViewModel>(pageIndex, pageSize, totalItems, viewModels);
 
             return Ok(results);
         }
 
-        private async Task<List<TravelerItem>> GetItemsByIdsAsync(string ids)
+        private async Task<IList<TravelerViewModel>> GetItemsByIdsAsync(string ids)
         {
             var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
 
             if (!numIds.All(nid => nid.Ok))
             {
-                return new List<TravelerItem>();
+                return new List<TravelerViewModel>();
             }
 
             var idsToSelect = numIds
                 .Select(id => id.Value);
 
-            var items = await _travelContext.Travelers.Where(ci => idsToSelect.Contains(ci.Id)).ToListAsync();
-
-            return _mapper.Map<List<TravelerItem>>(items);
+            return await _travelerQueries.GetByIdsAsync(idsToSelect);
         }
 
-        [Route("items")]
+        [Route("create")]
         [HttpPost]
-        [ProducesResponseType(typeof(TravelerItem), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateTravelerAsync([FromBody]TravelerItem travelerItem)
         {
             if (travelerItem.Id != 0)
-                throw new ArgumentException("The 'Refuel.Id' must be different from 0.");
+                return BadRequest(new ArgumentException("The 'Id' must be different from 0."));
 
             Traveler traveler = _mapper.Map<Traveler>(travelerItem);
 
-            _travelContext.Travelers.Add(traveler);
-            await _travelContext.SaveChangesAsync();
+            _travelerRepository.Add(traveler);
+            await _travelerRepository.UnitOfWork.SaveChangesAsync();
 
-            travelerItem = _mapper.Map<TravelerItem>(traveler);
+            TravelerViewModel viewModel = await _travelerQueries.GetByIdAsync(traveler.Id);
 
-            return Ok(travelerItem);
+            return Ok(viewModel);
         }
 
         [Route("items")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(TravelerItem), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> UpdateTravelerAsync([FromBody]TravelerItem travelerItem)
         {
-            Traveler traveler = await _travelContext.Travelers.SingleOrDefaultAsync(t => t.Id == travelerItem.Id);
+            Traveler traveler = await _travelerRepository.GetByIdAsync(travelerItem.Id);
             if (traveler == null)
                 return NotFound(new { Message = $"Traveler with Id {travelerItem.Id} not found" });
 
             _mapper.Map(travelerItem, traveler);
 
-            _travelContext.Travelers.Update(traveler);
-            await _travelContext.SaveChangesAsync();
+            _travelerRepository.Update(traveler);
+            await _travelerRepository.UnitOfWork.SaveChangesAsync();
 
-            travelerItem = _mapper.Map<TravelerItem>(traveler);
+            TravelerViewModel viewModel = _mapper.Map<TravelerViewModel>(traveler);
 
-            return Ok(travelerItem);
+            return Ok(viewModel);
         }
 
-        [Route("{id}")]
-        [HttpDelete]
+        [Route("deactivate/{id}")]
+        [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeleteTravelerAsync(int id)
         {
-            Traveler traveler = await _travelContext.Travelers.SingleOrDefaultAsync(t => t.Id == id);
-            if (traveler == null)
+            if (!_travelerQueries.TravelerExists(id))
                 return NotFound(new { Message = $"Traveler with Id {id} not found" });
 
-            _travelContext.Travelers.Remove(traveler);
-            await _travelContext.SaveChangesAsync();
-            
-            return NoContent();
+            Traveler traveler = await _travelerRepository.GetByIdAsync(id);
+            traveler.Deactivate();
+
+            _travelerRepository.Update(traveler);
+            await _travelerRepository.UnitOfWork.SaveChangesAsync();
+
+            TravelerViewModel viewModel = _mapper.Map<TravelerViewModel>(traveler);
+            return Ok(viewModel);
         }
     }
 }

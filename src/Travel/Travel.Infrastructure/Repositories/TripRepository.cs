@@ -3,27 +3,35 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.SeedWork;
-using Travel.Domain.AggregatesModel.TravelAggregate;
+using Microsoft.EntityFrameworkCore;
+using Travel.Domain.AggregatesModel.TripAggregate;
 
 namespace Travel.Infrastructure.Repositories
 {
     public class TripRepository : ITripRepository
     {
-        public IUnitOfWork UnitOfWork => throw new NotImplementedException();
+        private readonly TravelContext _context;
+
+        public IUnitOfWork UnitOfWork => _context;
+
+        public TripRepository(TravelContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
 
         public Trip Add(Trip trip)
         {
-            throw new NotImplementedException();
+            return _context.Add(trip).Entity;
         }
 
-        public Task<Trip> GetByIdAsync(int idTrip)
+        public async Task<Trip> GetByIdAsync(int idTrip)
         {
-            throw new NotImplementedException();
+            return await _context.Trips.FindAsync(idTrip);
         }
 
         public void Update(Trip trip)
         {
-            throw new NotImplementedException();
+            _context.Entry(trip).State = EntityState.Modified;
         }
     }
 }

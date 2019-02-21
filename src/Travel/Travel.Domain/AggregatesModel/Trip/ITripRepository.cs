@@ -1,7 +1,7 @@
 ﻿using Domain.SeedWork;
 using System.Threading.Tasks;
 
-namespace Travel.Domain.AggregatesModel.TravelAggregate
+namespace Travel.Domain.AggregatesModel.TripAggregate
 {
     public interface ITripRepository : IRepository<Trip>
     {

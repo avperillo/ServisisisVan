@@ -10,6 +10,9 @@ namespace Travel.API.Infrastructure.MappingProfiles
         {
             CreateMap<Traveler, TravelerItem>();
             CreateMap<TravelerItem, Traveler>();
+
+            CreateMap<Traveler, TravelerViewModel>();
+            CreateMap<TravelerViewModel, Traveler>();
         }
     }
 }

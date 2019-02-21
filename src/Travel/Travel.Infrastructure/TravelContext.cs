@@ -13,7 +13,7 @@ namespace Travel.Infrastructure
     public class TravelContext : DbContext, IUnitOfWork
     {
 
-        public DbSet<Travel.Domain.AggregatesModel.TravelAggregate.Trip> Travels { get; set; }
+        public DbSet<Travel.Domain.AggregatesModel.TripAggregate.Trip> Trips { get; set; }
         public DbSet<Travel.Domain.AggregatesModel.TravelerAggregate.Traveler> Travelers { get; set; }
         public DbSet<Travel.Domain.AggregatesModel.RefuelAggregate.Refuel> Refuels { get; set; }
         public IDbContextTransaction CurrentTransaction { get; private set; }

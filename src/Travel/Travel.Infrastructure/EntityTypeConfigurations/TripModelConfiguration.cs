@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using Travel.Domain.AggregatesModel.TravelAggregate;
+using Travel.Domain.AggregatesModel.TripAggregate;
 
 namespace Travel.Infrastructure.EntityTypeConfigurations
 {

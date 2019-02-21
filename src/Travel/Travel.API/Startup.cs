@@ -13,8 +13,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Travel.API.Infrastructure.Queries;
 using Travel.API.Infrastructure.Services;
+using Travel.Domain.AggregatesModel.RefuelAggregate;
+using Travel.Domain.AggregatesModel.TravelerAggregate;
+using Travel.Domain.AggregatesModel.TripAggregate;
 using Travel.Infrastructure;
+using Travel.Infrastructure.Repositories;
 
 namespace Travel.API
 {
@@ -33,7 +38,9 @@ namespace Travel.API
             services.AddCustomMvc()
                 .AddCustomDbContext(Configuration)
                 .AddCustomMapper()
-                .AddSwagger();
+                .AddSwagger()
+                .AddRepositories()
+                .AddQueries();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,6 +125,25 @@ namespace Travel.API
 
             return services;
         }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<ITripRepository, TripRepository>();
+            services.AddScoped<ITravelerRepository, TravelerRepository>();
+            services.AddScoped<IRefuelRepository, RefuelRepository>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddQueries(this IServiceCollection services)
+        {
+            services.AddScoped<ITripQueries, TripQueries>();
+            services.AddScoped<ITravelerQueries, TravelerQueries>();
+            services.AddScoped<IRefuelQueries, RefuelQueries>();
+
+            return services;
+        }
+
     }
 
     static class ApplicationBuilderExtensions
