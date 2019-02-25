@@ -17,19 +17,16 @@ namespace Travel.API.Controllers
     [ApiController]
     public class TripController : ControllerBase
     {
-        private readonly ITripRepository _tripRepository;
+        private readonly ITripService _tripService;
         private readonly ITripQueries _tripQuery;
-        private readonly ITravelerQueries _travelerQuery;
         private readonly IMapperService _mapper;
 
-        public TripController(ITripRepository tripRepository
+        public TripController(ITripService tripService
                                 , ITripQueries tripQuery
-                                , ITravelerQueries travelerQuery
                                 , IMapperService mapper)
         {
-            _tripRepository = tripRepository;
+            _tripService = tripService;
             _tripQuery = tripQuery;
-            _travelerQuery = travelerQuery;
             _mapper = mapper;
         }
 
@@ -39,14 +36,17 @@ namespace Travel.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<TripViewModel>> CreateTripAsync(TripItem tripItem)
         {
-            if (!_travelerQuery.TravelerExists(tripItem.IdDriver))
-                return BadRequest(new TravelerNotExistException($"'{tripItem.IdDriver}' doesn´t exists"));
-
             Trip trip = new Trip(tripItem.Date, tripItem.IdDriver);
             _mapper.Map(tripItem, trip);
 
-            trip = _tripRepository.Add(trip);
-            await _tripRepository.UnitOfWork.SaveChangesAsync();
+            try
+            {
+                trip = await _tripService.CreateAsync(trip);
+            }
+            catch (Exception exception)
+            {
+                BadRequest(exception);
+            }
 
             TripViewModel tripVM = await _tripQuery.GetTripByIdAsync(trip.Id);
 

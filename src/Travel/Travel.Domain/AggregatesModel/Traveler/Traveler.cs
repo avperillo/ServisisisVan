@@ -26,5 +26,14 @@ namespace Travel.Domain.AggregatesModel.TravelerAggregate
             AddDomainEvent(new TravelerDeactivatedDomainEvent(this));
         }
 
+        public void Reactivate()
+        {
+            if (!LeavingDate.HasValue)
+                throw new TravelerAlreadyActivatedException();
+
+            LeavingDate = null;
+            AddDomainEvent(new TravelerReactivatedDomainEvent(this));
+        }
+
     }
 }

@@ -18,15 +18,15 @@ namespace Travel.API.Controllers
     [ApiController]
     public class TravelerController : ControllerBase
     {
-        private readonly ITravelerRepository _travelerRepository;
+        private readonly ITravelerService _travelerService;
         private readonly ITravelerQueries _travelerQueries;
         private readonly IMapperService _mapper;
 
-        public TravelerController(ITravelerRepository travelerRepository,
+        public TravelerController(ITravelerService travelerService,
             ITravelerQueries travelerQueries,
             IMapperService mapper)
         {
-            _travelerRepository = travelerRepository;
+            _travelerService = travelerService;
             _travelerQueries = travelerQueries;
             _mapper = mapper;
         }
@@ -81,33 +81,35 @@ namespace Travel.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateTravelerAsync([FromBody]TravelerItem travelerItem)
         {
-            if (travelerItem.Id != 0)
-                return BadRequest(new ArgumentException("The 'Id' must be different from 0."));
-
             Traveler traveler = _mapper.Map<Traveler>(travelerItem);
 
-            _travelerRepository.Add(traveler);
-            await _travelerRepository.UnitOfWork.SaveChangesAsync();
+            try
+            {
+                await _travelerService.CreateAsync(traveler);
+            }
+            catch (Exception exception)
+            {
+                BadRequest(exception);
+            }
 
             TravelerViewModel viewModel = await _travelerQueries.GetByIdAsync(traveler.Id);
 
             return Ok(viewModel);
         }
 
-        [Route("items")]
+        [Route("update")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> UpdateTravelerAsync([FromBody]TravelerItem travelerItem)
         {
-            Traveler traveler = await _travelerRepository.GetByIdAsync(travelerItem.Id);
+            Traveler traveler = await _travelerService.GetByIdAsync(travelerItem.Id);
             if (traveler == null)
                 return NotFound(new { Message = $"Traveler with Id {travelerItem.Id} not found" });
 
             _mapper.Map(travelerItem, traveler);
 
-            _travelerRepository.Update(traveler);
-            await _travelerRepository.UnitOfWork.SaveChangesAsync();
+            await _travelerService.UpdateAsync(traveler);
 
             TravelerViewModel viewModel = _mapper.Map<TravelerViewModel>(traveler);
 
@@ -117,17 +119,46 @@ namespace Travel.API.Controllers
         [Route("deactivate/{id}")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteTravelerAsync(int id)
+        public async Task<IActionResult> DeactivateTravelerAsync(int id)
         {
             if (!_travelerQueries.TravelerExists(id))
                 return NotFound(new { Message = $"Traveler with Id {id} not found" });
 
-            Traveler traveler = await _travelerRepository.GetByIdAsync(id);
-            traveler.Deactivate();
+            Traveler traveler = await _travelerService.GetByIdAsync(id);
+            try
+            {
+                await _travelerService.DeactivateAsync(traveler);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception);
+            }
 
-            _travelerRepository.Update(traveler);
-            await _travelerRepository.UnitOfWork.SaveChangesAsync();
+            TravelerViewModel viewModel = _mapper.Map<TravelerViewModel>(traveler);
+            return Ok(viewModel);
+        }
+
+        [Route("reactivate/{id}")]
+        [HttpPut]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(TravelerViewModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> ReactivateTravelerAsync(int id)
+        {
+            if (!_travelerQueries.TravelerExists(id))
+                return NotFound(new { Message = $"Traveler with Id {id} not found" });
+
+            Traveler traveler = await _travelerService.GetByIdAsync(id);
+            try
+            {
+                await _travelerService.ReactivateAsync(traveler);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception);
+            }
 
             TravelerViewModel viewModel = _mapper.Map<TravelerViewModel>(traveler);
             return Ok(viewModel);

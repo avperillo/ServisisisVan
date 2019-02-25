@@ -20,6 +20,7 @@ using Travel.Domain.AggregatesModel.TravelerAggregate;
 using Travel.Domain.AggregatesModel.TripAggregate;
 using Travel.Infrastructure;
 using Travel.Infrastructure.Repositories;
+using Travel.Infrastructure.Services;
 
 namespace Travel.API
 {
@@ -40,7 +41,8 @@ namespace Travel.API
                 .AddCustomMapper()
                 .AddSwagger()
                 .AddRepositories()
-                .AddQueries();
+                .AddQueries()
+                .AddApplicationServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,6 +142,15 @@ namespace Travel.API
             services.AddScoped<ITripQueries, TripQueries>();
             services.AddScoped<ITravelerQueries, TravelerQueries>();
             services.AddScoped<IRefuelQueries, RefuelQueries>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<ITripService, TripService>();
+            services.AddScoped<ITravelerService, TravelerService>();
+            services.AddScoped<IRefuelService, RefuelService>();
 
             return services;
         }

@@ -16,13 +16,13 @@ namespace Travel.API.Controllers
     [ApiController]
     public class RefuelController : ControllerBase
     {
-        private readonly IRefuelRepository _refuelRepository;
+        private readonly IRefuelService _refuelService;
         private readonly IRefuelQueries _refuelQueries;
         private readonly IMapperService _mapper;
 
-        public RefuelController(IRefuelRepository refuelRepository, IRefuelQueries refuelQueries, IMapperService mapper)
+        public RefuelController(IRefuelService refuelService, IRefuelQueries refuelQueries, IMapperService mapper)
         {
-            _refuelRepository = refuelRepository;
+            _refuelService = refuelService;
             _refuelQueries = refuelQueries;
             _mapper = mapper;
         }
@@ -72,53 +72,54 @@ namespace Travel.API.Controllers
             return items.ToList();
         }
 
-        [Route("items")]
+        [Route("create")]
         [HttpPost]
         [ProducesResponseType(typeof(RefuelViewModel), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ArgumentException), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateRefuelAsync([FromBody]RefuelItem refuelItem)
         {
-            if (refuelItem.Id != 0)
-                return BadRequest(new ArgumentException("The 'Refuel.Id' must be different from 0."));
-
             Refuel refuel = _mapper.Map<Refuel>(refuelItem);
 
-            refuel = _refuelRepository.Add(refuel);
-            await _refuelRepository.UnitOfWork.SaveChangesAsync();
+            try
+            {
+                refuel = await _refuelService.CreateAsync(refuel);
+            }
+            catch (Exception exception)
+            {
+                BadRequest(exception);
+            }
             
             return Ok(_mapper.Map<RefuelViewModel>(refuel));
         }
 
-        [Route("items")]
+        [Route("update")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(RefuelViewModel), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> UpdateRefuelAsync([FromBody]RefuelItem refuelItem)
         {
-            Refuel refuel = await _refuelRepository.GetByIdAsync(refuelItem.Id);
+            Refuel refuel = await _refuelService.GetByIdAsync(refuelItem.Id);
             if (refuel == null)
                 return NotFound(new { Message = $"Refuel with Id {refuelItem.Id} not found" });
 
             _mapper.Map(refuelItem, refuel);
 
-            _refuelRepository.Update(refuel);
-            await _refuelRepository.UnitOfWork.SaveChangesAsync();
+            await _refuelService.UpdateAsync(refuel);
             
             return Ok(_mapper.Map<RefuelViewModel>(refuel));
         }
 
-        [Route("{id}")]
+        [Route("delete/{id}")]
         [HttpDelete]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> DeleteRefuelAsync(int id)
         {
-            Refuel refuel = await _refuelRepository.GetByIdAsync(id);
+            Refuel refuel = await _refuelService.GetByIdAsync(id);
             if (refuel == null)
                 return NotFound(new { Message = $"Refuel with Id {id} not found" });
 
-            _refuelRepository.Remove(refuel);
-            await _refuelRepository.UnitOfWork.SaveChangesAsync();
+            await _refuelService.DeleteAsync(refuel);
 
             return NoContent();
         }
