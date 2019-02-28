@@ -33,5 +33,10 @@ namespace Travel.Infrastructure.Repositories
         {
             _context.Entry(trip).State = EntityState.Modified;
         }
+
+        public void Remove(Trip trip)
+        {
+            _context.Trips.Remove(trip);
+        }
     }
 }

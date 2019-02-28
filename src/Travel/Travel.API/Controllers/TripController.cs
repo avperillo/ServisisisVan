@@ -30,6 +30,51 @@ namespace Travel.API.Controllers
             _mapper = mapper;
         }
 
+        [Route("items/{ids?}")]
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginatedResults<TripViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<TripViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> ItemsAsync([FromQuery]int pageSize = 10, [FromQuery]int pageIndex = 0, string ids = null)
+        {
+            if (!string.IsNullOrEmpty(ids))
+            {
+                var arrayItems = await GetItemsByIdsAsync(ids);
+
+                if (!arrayItems.Any())
+                {
+                    return BadRequest("ids value invalid. Must be comma-separated list of numbers");
+                }
+
+                return Ok(arrayItems);
+            }
+
+            var totalItems = await _tripQuery.CountAsync();
+
+            var items = await _tripQuery.GetPagedAsync(pageSize, pageIndex);
+
+            var results = new PaginatedResults<TripViewModel>(pageIndex, pageSize, totalItems, items);
+
+            return Ok(results);
+        }
+
+        private async Task<List<TripViewModel>> GetItemsByIdsAsync(string ids)
+        {
+            var numIds = ids.Split(',').Select(id => (Ok: int.TryParse(id, out int x), Value: x));
+
+            if (!numIds.All(nid => nid.Ok))
+            {
+                return new List<TripViewModel>();
+            }
+
+            var idsToSelect = numIds
+                .Select(id => id.Value);
+
+            var items = await _tripQuery.GetByIdsAsync(idsToSelect);
+
+            return items.ToList();
+        }
+
         [Route("create")]
         [HttpPost]
         [ProducesResponseType(typeof(TripViewModel), (int)HttpStatusCode.Created)]
@@ -53,7 +98,23 @@ namespace Travel.API.Controllers
             return Ok(tripVM);
         }
 
+        [Route("delete/{id}")]
+        [HttpDelete]
+        [ProducesResponseType(typeof(TripViewModel), (int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<TripViewModel>> DeleteTripAsync(int idTrip)
+        {
+            try
+            {
+                await _tripService.DeleteAsync(idTrip);
+            }
+            catch (Exception exception)
+            {
+                BadRequest(exception);
+            }
 
+            return Ok();
+        }
 
     }
 }

@@ -34,7 +34,7 @@ namespace Travel.API.Infrastructure.Queries
         public async Task<IList<RefuelViewModel>> GetPagedAsync(int pageSize = 10, int pageIndex = 0)
         {
             var qry = await _context.Refuels
-                .OrderBy(c => c.Date)
+                .OrderByDescending(c => c.Date)
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize)
                 .ToListAsync();

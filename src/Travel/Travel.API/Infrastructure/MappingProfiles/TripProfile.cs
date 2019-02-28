@@ -14,6 +14,9 @@ namespace Travel.API.Infrastructure.MappingProfiles
         {
             CreateMap<Trip, TripItem>();
             CreateMap<TripItem, Trip>();
+
+            CreateMap<Trip, TripViewModel>();
+            CreateMap<TripViewModel, Trip>();
         }
     }
 }

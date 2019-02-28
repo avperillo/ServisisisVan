@@ -7,6 +7,7 @@ namespace Travel.Domain.AggregatesModel.TripAggregate
     {
         Trip Add(Trip trip);
         void Update(Trip trip);
+        void Remove(Trip trip);
         Task<Trip> GetByIdAsync(int idTrip);
     }
 }

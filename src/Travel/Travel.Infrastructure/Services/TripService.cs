@@ -23,7 +23,7 @@ namespace Travel.Infrastructure.Services
         {
             if (trip.Id == 0)
                 throw new ArgumentException("The Id must be 0", nameof(trip.Id));
-            
+
             Traveler traveler = await travelerRepository.GetByIdAsync(trip.IdDriver);
             if (traveler == null)
                 throw new TravelerNotExistException($"'{trip.IdDriver}' doesn´t exists");
@@ -37,9 +37,17 @@ namespace Travel.Infrastructure.Services
             return trip;
         }
 
-        public Task<Trip> GetTripByIdAsync(int idTrip)
+        public async Task<Trip> GetTripByIdAsync(int idTrip)
         {
-            return tripRepository.GetByIdAsync(idTrip);
+            return await tripRepository.GetByIdAsync(idTrip);
+        }
+
+        public async Task DeleteAsync(int idTrip)
+        {
+            Trip trip = await tripRepository.GetByIdAsync(idTrip) 
+                            ?? throw new ArgumentException($"The trip {idTrip} not exist");
+
+            tripRepository.Remove(trip);
         }
     }
 }

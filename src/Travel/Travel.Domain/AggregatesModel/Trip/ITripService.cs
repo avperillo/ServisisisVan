@@ -6,5 +6,6 @@ namespace Travel.Domain.AggregatesModel.TripAggregate
     {
         Task<Trip> CreateAsync(Trip trip);
         Task<Trip> GetTripByIdAsync(int idTrip);
+        Task DeleteAsync(int idTrip);
     }
 }
