@@ -90,7 +90,7 @@ namespace Travel.API.Controllers
             }
             catch (Exception exception)
             {
-                BadRequest(exception);
+                return BadRequest(exception);
             }
 
             TripViewModel tripVM = await _tripQuery.GetTripByIdAsync(trip.Id);

@@ -33,5 +33,10 @@ namespace Travel.Infrastructure.Repositories
         {
             _context.Entry(traveler).State = EntityState.Modified;
         }
+
+        public async Task<IList<Traveler>> GetAllAsync()
+        {
+            return await _context.Travelers.ToListAsync();
+        }
     }
 }

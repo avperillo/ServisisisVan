@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190524165745_Collections_Entries.cs" />
+    <Compile Remove="Migrations\20190524165745_Collections_Entries.Designer.cs" />
+    <Compile Remove="Migrations\20190524170344_Collections_Entries.cs" />
+    <Compile Remove="Migrations\20190524170344_Collections_Entries.Designer.cs" />
+    <Compile Remove="Migrations\20190524180916_AddCollectionStates.cs" />
+    <Compile Remove="Migrations\20190524180916_AddCollectionStates.Designer.cs" />
+    <Compile Remove="Migrations\20190524181658_ChangeEntityCollectionState.cs" />
+    <Compile Remove="Migrations\20190524181658_ChangeEntityCollectionState.Designer.cs" />
+    <Compile Remove="Migrations\20190524182537_AddCollectionStates.cs" />
+    <Compile Remove="Migrations\20190524182537_AddCollectionStates.Designer.cs" />
+    <Compile Remove="Migrations\20190524183545_Remove.Col.Id.CollectionStates.cs" />
+    <Compile Remove="Migrations\20190524183545_Remove.Col.Id.CollectionStates.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

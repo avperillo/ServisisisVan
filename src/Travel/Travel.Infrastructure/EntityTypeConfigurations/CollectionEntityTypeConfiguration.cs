@@ -20,7 +20,15 @@ namespace Travel.Infrastructure.EntityTypeConfigurations
             builder.Property(b => b.Date)
                 .HasDefaultValue(DateTime.Now);
 
-            builder.HasMany(b => b.Entries).WithOne().OnDelete(DeleteBehavior.Cascade);
+            builder.Property<int>("StateId").IsRequired();
+            builder.HasOne(b => b.State)
+                .WithMany()
+                .HasForeignKey("StateId");
+
+            builder.HasMany(b => b.Entries)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

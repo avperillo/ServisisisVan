@@ -11,5 +11,6 @@ namespace Travel.Domain.AggregatesModel.TravelerAggregate
         Traveler Add(Traveler traveler);
         void Update(Traveler traveler);
         Task<Traveler> GetByIdAsync(int idTraveler);
+        Task<IList<Traveler>> GetAllAsync();
     }
 }

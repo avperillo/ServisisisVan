@@ -11,6 +11,8 @@ namespace Travel.Domain.AggregatesModel.TravelerAggregate
         public bool IsDriver { get; private set; }
         public DateTime? LeavingDate { get; private set; } = null;
 
+        public Traveler() { }
+
         public Traveler(string name, bool isDriver)
         {
             Name = !string.IsNullOrWhiteSpace(name) ? name : throw new ArgumentException(nameof(name));

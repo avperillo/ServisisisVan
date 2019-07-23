@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Travel.API.ViewModel
 {
-    public class TripItem
+    public class EntryViewModel
     {
+        public int IdCollection { get; set; }
         public DateTime Date { get; set; }
-        public int IdDriver { get; set; }
-        public string Commentary { get; set; }
+        public int IdTraveler { get; set; }
+        public decimal Amount { get; set; }
     }
 }

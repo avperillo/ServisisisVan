@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Travel.Domain.AggregatesModel.CollectionAggregate
 {
-    public interface IIncomeRepository : IRepository<Collection>
+    public interface ICollectionRepository : IRepository<Collection>
     {
         Collection Add(Collection collection);
         void Update(Collection collection);

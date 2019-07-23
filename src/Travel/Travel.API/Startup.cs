@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Travel.API.Infrastructure.Queries;
 using Travel.API.Infrastructure.Services;
+using Travel.Domain.AggregatesModel.CollectionAggregate;
 using Travel.Domain.AggregatesModel.RefuelAggregate;
 using Travel.Domain.AggregatesModel.TravelerAggregate;
 using Travel.Domain.AggregatesModel.TripAggregate;
@@ -133,6 +134,7 @@ namespace Travel.API
             services.AddScoped<ITripRepository, TripRepository>();
             services.AddScoped<ITravelerRepository, TravelerRepository>();
             services.AddScoped<IRefuelRepository, RefuelRepository>();
+            services.AddScoped<ICollectionRepository, CollectionRepository>();
 
             return services;
         }
@@ -151,6 +153,7 @@ namespace Travel.API
             services.AddScoped<ITripService, TripService>();
             services.AddScoped<ITravelerService, TravelerService>();
             services.AddScoped<IRefuelService, RefuelService>();
+            services.AddScoped<ICollectionService, CollectionService>();
 
             return services;
         }

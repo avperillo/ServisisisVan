@@ -16,6 +16,7 @@ namespace Travel.Infrastructure
         public DbSet<Travel.Domain.AggregatesModel.TripAggregate.Trip> Trips { get; set; }
         public DbSet<Travel.Domain.AggregatesModel.TravelerAggregate.Traveler> Travelers { get; set; }
         public DbSet<Travel.Domain.AggregatesModel.RefuelAggregate.Refuel> Refuels { get; set; }
+        public DbSet<Travel.Domain.AggregatesModel.CollectionAggregate.Collection> Collections { get; set; }
         public IDbContextTransaction CurrentTransaction { get; private set; }
         
         public TravelContext(DbContextOptions<TravelContext> options) : base(options) { }
@@ -25,6 +26,8 @@ namespace Travel.Infrastructure
             modelBuilder.ApplyConfiguration(new TripEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TravelerEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CollectionEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CollectionStateEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EntryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RefuelEntityTypeConfiguration());
         }
 

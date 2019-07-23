@@ -21,7 +21,7 @@ namespace Travel.Infrastructure.Services
 
         public async Task<Trip> CreateAsync(Trip trip)
         {
-            if (trip.Id == 0)
+            if (trip.Id != 0)
                 throw new ArgumentException("The Id must be 0", nameof(trip.Id));
 
             Traveler traveler = await travelerRepository.GetByIdAsync(trip.IdDriver);

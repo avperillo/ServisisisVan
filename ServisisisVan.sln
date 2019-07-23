@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Travel.API", "src\Travel\Tr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{726A92D3-F76D-40E8-8835-867BC58EFB95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travel.DomainTest", "src\Travel\Tests\Travel.DomainTest\Travel.DomainTest.csproj", "{E92998D9-E71D-46D6-9B19-62316063BD43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Travel.DomainTest", "src\Travel\Tests\Travel.DomainTest\Travel.DomainTest.csproj", "{E92998D9-E71D-46D6-9B19-62316063BD43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travel.DomainFake", "src\Travel\Tests\Travel.DomainFake\Travel.DomainFake.csproj", "{C84442DE-E703-4D7C-B46C-47F40218FD29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{E92998D9-E71D-46D6-9B19-62316063BD43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E92998D9-E71D-46D6-9B19-62316063BD43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E92998D9-E71D-46D6-9B19-62316063BD43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{9E5871E2-2C02-4164-A097-466C6D9E713D} = {199A7F08-7BB6-4AF1-A7BA-FDC9845A3E57}
 		{726A92D3-F76D-40E8-8835-867BC58EFB95} = {199A7F08-7BB6-4AF1-A7BA-FDC9845A3E57}
 		{E92998D9-E71D-46D6-9B19-62316063BD43} = {726A92D3-F76D-40E8-8835-867BC58EFB95}
+		{C84442DE-E703-4D7C-B46C-47F40218FD29} = {726A92D3-F76D-40E8-8835-867BC58EFB95}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {07892906-EC15-4618-BA88-922F26B20568}

@@ -3,22 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Travel.Infrastructure;
 
 namespace Travel.API.Migrations
 {
     [DbContext(typeof(TravelContext))]
-    partial class TravelContextModelSnapshot : ModelSnapshot
+    [Migration("20190526080000_RemoveColStateCollection")]
+    partial class RemoveColStateCollection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("Relational:Sequence:.collection_sequence", "'collection_sequence', '', '1', '10', '', '', 'Int64', 'False'")
-                .HasAnnotation("Relational:Sequence:.entry_sequence", "'entry_sequence', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:.refuel_sequence", "'refuel_sequence', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:.traveler_sequence", "'traveler_sequence', '', '1', '10', '', '', 'Int64', 'False'")
                 .HasAnnotation("Relational:Sequence:.trip_sequence", "'trip_sequence', '', '1', '10', '', '', 'Int64', 'False'")
@@ -33,45 +34,24 @@ namespace Travel.API.Migrations
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 7, 23, 20, 8, 59, 581, DateTimeKind.Local).AddTicks(9499));
-
-                    b.Property<int>("StateId");
+                        .HasDefaultValue(new DateTime(2019, 5, 26, 9, 59, 59, 821, DateTimeKind.Local).AddTicks(6498));
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StateId");
 
                     b.ToTable("Collections");
-                });
-
-            modelBuilder.Entity("Travel.Domain.AggregatesModel.CollectionAggregate.CollectionState", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasDefaultValue(1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CollectionStates");
                 });
 
             modelBuilder.Entity("Travel.Domain.AggregatesModel.CollectionAggregate.Entry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "entry_sequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Amount");
 
                     b.Property<int?>("CollectionId");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 7, 23, 20, 8, 59, 608, DateTimeKind.Local).AddTicks(2186));
+                    b.Property<DateTime>("Date");
 
                     b.Property<int>("IdTraveler");
 
@@ -79,7 +59,7 @@ namespace Travel.API.Migrations
 
                     b.HasIndex("CollectionId");
 
-                    b.ToTable("Entries");
+                    b.ToTable("Entry");
                 });
 
             modelBuilder.Entity("Travel.Domain.AggregatesModel.RefuelAggregate.Refuel", b =>
@@ -93,7 +73,7 @@ namespace Travel.API.Migrations
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 7, 23, 20, 8, 59, 613, DateTimeKind.Local).AddTicks(9049));
+                        .HasDefaultValue(new DateTime(2019, 5, 26, 9, 59, 59, 827, DateTimeKind.Local).AddTicks(4835));
 
                     b.HasKey("Id");
 
@@ -129,21 +109,13 @@ namespace Travel.API.Migrations
 
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
-                        .HasDefaultValue(new DateTime(2019, 7, 23, 20, 8, 59, 560, DateTimeKind.Local).AddTicks(8611));
+                        .HasDefaultValue(new DateTime(2019, 5, 26, 9, 59, 59, 809, DateTimeKind.Local).AddTicks(9199));
 
                     b.Property<int>("IdDriver");
 
                     b.HasKey("Id");
 
                     b.ToTable("Trips");
-                });
-
-            modelBuilder.Entity("Travel.Domain.AggregatesModel.CollectionAggregate.Collection", b =>
-                {
-                    b.HasOne("Travel.Domain.AggregatesModel.CollectionAggregate.CollectionState", "State")
-                        .WithMany()
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Travel.Domain.AggregatesModel.CollectionAggregate.Entry", b =>
