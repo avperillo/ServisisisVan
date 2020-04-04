@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C54CCC70-23FC-45B4-B495-4C957C7883AF}"
 EndProject
@@ -21,7 +21,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{726A92D3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Travel.DomainTest", "src\Travel\Tests\Travel.DomainTest\Travel.DomainTest.csproj", "{E92998D9-E71D-46D6-9B19-62316063BD43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Travel.DomainFake", "src\Travel\Tests\Travel.DomainFake\Travel.DomainFake.csproj", "{C84442DE-E703-4D7C-B46C-47F40218FD29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Travel.DomainFake", "src\Travel\Tests\Travel.DomainFake\Travel.DomainFake.csproj", "{C84442DE-E703-4D7C-B46C-47F40218FD29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Api", "src\Identity\Identity.Api.csproj", "{47F4EA6C-E031-480D-9285-C11572DE7A0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{A2A8495C-A0B3-4CCF-859F-39CD84407499}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,10 @@ Global
 		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C84442DE-E703-4D7C-B46C-47F40218FD29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F4EA6C-E031-480D-9285-C11572DE7A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F4EA6C-E031-480D-9285-C11572DE7A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F4EA6C-E031-480D-9285-C11572DE7A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F4EA6C-E031-480D-9285-C11572DE7A0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +75,8 @@ Global
 		{726A92D3-F76D-40E8-8835-867BC58EFB95} = {199A7F08-7BB6-4AF1-A7BA-FDC9845A3E57}
 		{E92998D9-E71D-46D6-9B19-62316063BD43} = {726A92D3-F76D-40E8-8835-867BC58EFB95}
 		{C84442DE-E703-4D7C-B46C-47F40218FD29} = {726A92D3-F76D-40E8-8835-867BC58EFB95}
+		{47F4EA6C-E031-480D-9285-C11572DE7A0C} = {A2A8495C-A0B3-4CCF-859F-39CD84407499}
+		{A2A8495C-A0B3-4CCF-859F-39CD84407499} = {C54CCC70-23FC-45B4-B495-4C957C7883AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {07892906-EC15-4618-BA88-922F26B20568}
